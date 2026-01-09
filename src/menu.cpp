@@ -1,4 +1,4 @@
-
+#include "menu.h"
 
 //==============================
 //    MENU
@@ -249,7 +249,7 @@ void Up()
             case 6: ADD(CurveForm); SAVE(CURVEFORM); break;//CurveForm
             case 7: ADD(Xtalk); SAVE(XTALK); break;//XTalk
             case 8: ADD(XtalkGroup); SAVE(XTALKGROUP); break;//XTalkGroup
-            case 9: Pin[eMenuPage-2].Type=(type)((Pin[eMenuPage-2].Type+1)%128); SAVE(TYPE); break;//Type
+            case 9: Pin[eMenuPage-2].Type=(PinType)((Pin[eMenuPage-2].Type+1)%128); SAVE(TYPE); break;//Type
             case 10: ADD(ChokeNote); SAVE(CHOKENOTE); break;//ChokeNote
             #if ENABLE_CHANNEL
             case 11:  ADD(Channel); SAVE(CHANNEL); break;//Channel
@@ -486,7 +486,7 @@ void Draw()
             case 6: SUB(CurveForm); SAVE(CURVEFORM); break;//CurveForm
             case 7: SUB(Xtalk); SAVE(XTALK); break;//XTalk
             case 8: SUB(XtalkGroup); SAVE(XTALKGROUP); break;//XTalkGroup
-            case 9: TSUB(Type,type); SAVE(TYPE); break;//Type
+            case 9: TSUB(Type,PinType); SAVE(TYPE); break;//Type
             case 10: SUB(ChokeNote); SAVE(CHOKENOTE); break;//ChokeNote
             #if ENABLE_CHANNEL
             case 11: SUB(Channel); SAVE(CHANNEL); break;//Channel

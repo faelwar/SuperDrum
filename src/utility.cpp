@@ -1,4 +1,6 @@
-
+#include "utility.h"
+#include "consts.h"
+#include "midi.h"
 //=================================
 //   MENU LOG
 //=================================
@@ -30,15 +32,11 @@ int d_vmin=1024;  //Total min hit value
 #endif
 //=================================
 
-//===============================
-//   LOG
-//===============================
-byte LogPin=0xFF;
-byte LogThresold=0xFF;
 
-short N=0;//Unsent log
 
-bool Diagnostic=false;
+
+
+
 //===============================
 
 //===============================

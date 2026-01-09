@@ -1,3 +1,4 @@
+#pragma once
 //==============================
 //    RASPBERRY PI
 //==============================
@@ -10,11 +11,6 @@
 #endif
 
 
-void piNote(byte note, byte velocity) {
-
-    mySerial.write(0x90 | 0x09); 
-    mySerial.write(note); 
-    mySerial.write(velocity);
-}
+void piNote(byte note, byte velocity);
 
 #endif

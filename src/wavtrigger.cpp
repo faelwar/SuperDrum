@@ -1,4 +1,4 @@
-
+#include "wavtrigger.h"
 //==============================
 //    WAVTRIGGER: http://robertsonics.com/wav-trigger/
 //==============================
