@@ -14,15 +14,7 @@
 //------------------------------------------------------------------------------
 void LoadAllEEPROM() {
   #if defined(__AVR__)
-	#if TEXT_OUTPUT
-      Serial.print("AVR - ");
-      Serial.println(__AVR__);
-    #endif
     byte Version = EEPROM.read(1);
-    #if TEXT_OUTPUT
-      Serial.print("Version - ");
-      Serial.println(Version);
-    #endif
     if (Version == 8) {
       LoadGeneralEEPROM(0);
       LoadGeneralEEPROM(2);

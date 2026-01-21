@@ -7,7 +7,7 @@
 #include "eeprom.h"
 #include "pin.h"
 #include "utility.h"
-
+#include "define.h"
 //===========SETTING============
 const byte NOTE       = 0x00;
 const byte THRESOLD   = 0x01;

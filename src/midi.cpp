@@ -1,10 +1,10 @@
 #include "midi.h"
-
+#include "define.h"
 //==============================
 //    MIDI
 //==============================
 void noteOn(byte channel, byte note, byte velocity) {
-  Serial.println("NoteOn");
+  Serial.println("NoteOn-" + String(random(10,100)));
   #if TEXT_OUTPUT
     Serial.print("CHANNEL - ");
     Serial.println(channel);
@@ -41,9 +41,9 @@ void midiCC(byte channel, byte number, byte value) {
     Serial.print("CHANNEL - ");
     Serial.println(channel);
     Serial.print("NOTE - ");
-    Serial.println(note);
+    Serial.println(number);
     Serial.print("VELOCITY - ");
-    Serial.println(velocity);
+    Serial.println(value);
   #else
     Serial.write(0xB0 | channel);
     Serial.write(number);
@@ -54,10 +54,6 @@ void midiCC(byte channel, byte number, byte value) {
 //=============SYSEX=========
 void simpleSysex(byte cmd, byte data1, byte data2, byte data3) {
   Serial.println("simpleSysex");
-
-  #if USE_LCD
-    if (cmd == 0x6F) DrawDiagnostic(data1, data2);
-  #endif
 
   Serial.write(0xF0);
   Serial.write(0x77);
@@ -80,8 +76,17 @@ void Sysex(byte cmd, byte* message, byte size) {
 //============================
 
 void MIDI_TX(byte MESSAGE, byte PITCH, byte VELOCITY) {
-  Serial.println("MIDI_TX");
-  Serial.write(MESSAGE);
-  Serial.write(PITCH);
-  Serial.write(VELOCITY);
+  #if TEXT_OUTPUT
+    Serial.println("MIDI_TX");
+	Serial.print("MESSAGE - ");
+    Serial.println(MESSAGE);
+    Serial.print("PITCH - ");
+    Serial.println(PITCH);
+    Serial.print("VELOCITY - ");
+    Serial.println(VELOCITY);
+  #else
+    Serial.write(MESSAGE);
+    Serial.write(PITCH);
+    Serial.write(VELOCITY);
+  #endif
 }

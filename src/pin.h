@@ -44,9 +44,14 @@ enum curve : byte {
 //===========================
 //   PIN
 //===========================
-class pin {
+class pin : public Printable {
 public:
   pin();
+
+  //===============================
+  //   PRINTABLE
+  //===============================
+  size_t printTo(Print& p) const override;
 
   //===============================
   //   SET

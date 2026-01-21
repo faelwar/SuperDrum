@@ -1,64 +1,8 @@
 #include "utility.h"
 #include "consts.h"
 #include "midi.h"
-//=================================
-//   MENU LOG
-//=================================
-
-#if MENU_LOG
-byte log_state=0;
-byte log_Nmax=0;  //Max noise
-
-unsigned long log_T1=0; //Start hit time
-//unsigned long log_T2=0;
-unsigned long log_Tmax=0;  //Max hit time
-int log_Vmax=0;   //Max hit value
-
-//byte log_note=0;
-//byte log_oldState=0;
-//short log_Show=0;
-
-unsigned long log_T50=0;  //Half value hit time
-
-unsigned long d_hsum=0;  //Sum Tmax
-unsigned long d_tsum=0;  //Sum T50
-//V2 unsigned long d_hsum2=0;  //Sum Tmax^2
-//V2 unsigned long d_tsum2=0;  //Sum T50^2
-byte d_tnum=0;  //Hit number
-//V2 byte d_rmin=0;
-int d_vmax=0; //Total max hit value
-int d_vmin=1024;  //Total min hit value
-//V2 int d_vmean=0;  //Total min hit value
-#endif
-//=================================
-
-
-
-
-
-
+#include "define.h"
 //===============================
-
-//===============================
-//  PRESCALER
-//===============================
-#if defined(__AVR__)
-// Maximum sampling frequency    // Resolution
-enum Prescaler {
-  Prescaler_2 = B00000000, // 16 MHz / 2 = 8 MHz            //
-  Prescaler_4 = B00000010, // 16 MHz / 4 = 4 MHz            // ~5.9
-  Prescaler_8 = B00000011, // 16 MHz / 8 = 2 MHz            // ~7.4
-  Prescaler_16 = B00000100, // 16 MHz / 16 = 1 MHz           // ~8.6
-  Prescaler_32 = B00000101, // 16 MHz / 32 = 500 kHz         // ~8.9
-  Prescaler_64 = B00000110, // 16 MHz / 64 = 250 kHz         // ~9.0
-  Prescaler_128 = B00000111, // 16 MHz / 128 = 125 kHz        // ~9.1
-};
-
-inline void setPrescaler(int prescaler) {
-  ADCSRA &= B11111000;
-  ADCSRA |= prescaler;
-}
-#endif
 
 //===============================
 
@@ -68,9 +12,9 @@ inline void setPrescaler(int prescaler) {
 #define PROFA TimeProfA=micros();
 #define PROFB TimeProf+=(micros()-TimeProfA); NProf++;
 #if USE_PROFILER
-unsigned long TimeProfA;
-unsigned long TimeProf=0;
-unsigned long NProf=0;
+  unsigned long TimeProfA;
+  unsigned long TimeProf=0;
+  unsigned long NProf=0;
 #endif
 //==============================
 
@@ -118,22 +62,22 @@ void SendLog(byte Sensor,int N,int Y0,int MaxRetrigger,int MaxReading,byte State
 //    SENDPROFILING
 //==============================
 #if USE_PROFILER
-void SendProfiling()
-{
-  byte buf[8];
-  
-  buf[0] = (byte) TimeProf; //Work only with Arduino serial (MIDI>127)
-  buf[1] = (byte) (TimeProf >> 8);
-  buf[2] = (byte) (TimeProf >> 16);
-  buf[3] = (byte) (TimeProf >> 24);
-  
-  buf[4] = (byte) NProf;
-  buf[5] = (byte) (NProf >> 8);
-  buf[6] = (byte) (NProf >> 16);
-  buf[7] = (byte) (NProf >> 24);
-  
-  Sysex(0x6D,buf,8);
-}
+  void SendProfiling()
+  {
+    byte buf[8];
+
+    buf[0] = (byte) TimeProf; //Work only with Arduino serial (MIDI>127)
+    buf[1] = (byte) (TimeProf >> 8);
+    buf[2] = (byte) (TimeProf >> 16);
+    buf[3] = (byte) (TimeProf >> 24);
+
+    buf[4] = (byte) NProf;
+    buf[5] = (byte) (NProf >> 8);
+    buf[6] = (byte) (NProf >> 16);
+    buf[7] = (byte) (NProf >> 24);
+
+    Sysex(0x6D,buf,8);
+  }
 #endif
 
 //==============================
@@ -141,7 +85,7 @@ void SendProfiling()
 //==============================
 void softReset() {
   #if defined(__AVR__)
-  asm volatile (" jmp 0");
+    asm volatile (" jmp 0");
   #endif 
 //wdt_enable(WDTO_30MS);
 }

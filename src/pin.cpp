@@ -1,5 +1,5 @@
 #include "pin.h"
-
+#include "define.h"
 //===========CURVE============
 const float _Exp[9]   = {2.33, 3.85, 6.35, 10.48, 17.28, 28.5, 46.99, 77.47, 127.74};
 const float _Log[9]   = {0, 83.67, 98.23, 106.74, 112.78, 117.47, 121.30, 124.53, 127.34};
@@ -10,8 +10,6 @@ const float _Flat[9]  = {0, 32.86, 46.42, 55.82, 64.0, 72.17, 81.57, 95.13, 127}
 //===========================
 //   DEFAULT PIN
 //===========================
-
-#if MEGA
 
 const byte DP_HHC       = 0x01;
 const byte DP_SNAREHEAD = 0x00;
@@ -30,36 +28,6 @@ const byte DP_CRASHEDGE = 0x0D;
 const byte DP_RIDEBOW   = 0x0E;
 const byte DP_RIDEEDGE  = 0x0F;
 
-#else
-
-const byte DP_SNAREHEAD  = 0x04;
-const byte DP_SNARERIM   = 0x06;
-const byte DP_KICK       = 0x07;
-const byte DP_EFFECT     = 0x05;
-const byte DP_HHBOW      = 0x03;
-const byte DP_HHEDGE     = 0x00;
-const byte DP_HHC        = 0x01;
-const byte DP_HHC_RING   = 0x02;
-
-const byte DP_RIDEBOW    = 0x0C;
-const byte DP_RIDEEDGE   = 0x0E;
-const byte DP_TOM1HEAD   = 0x0F;
-const byte DP_TOM1RIM    = 0x0D;
-const byte DP_TOM2HEAD   = 0x0B;
-const byte DP_TOM2RIM    = 0x08;
-const byte DP_CRASHBOW   = 0x09;
-const byte DP_CRASHEDGE  = 0x0A;
-
-const byte DP_TOM3HEAD   = 0x14;
-const byte DP_TOM3RIM    = 0x16;
-const byte DP_TOM4HEAD   = 0x17;
-const byte DP_TOM4RIM    = 0x15;
-const byte DP_CRASH2BOW  = 0x13;
-const byte DP_CRASH2EDGE = 0x10;
-const byte DP_CHINA      = 0x11;
-const byte DP_SPLASH     = 0x12;
-
-#endif
 
 //===========PIN============
 pin::pin() {
@@ -85,73 +53,97 @@ pin::pin() {
 }
 
 //===============================
+//   PRINTABLE
+//===============================
+static const char* typeNames[] = {"Piezo", "Switch", "HHC", "HH", "HHs", "YSwitch", "", "", "", "", "", "", "", "", "", "Disabled"};
+static const char* curveNames[] = {"Linear", "Exp", "Log", "Sigma", "Flat"};
+
+size_t pin::printTo(Print& p) const {
+  size_t n = 0;
+  n += p.print("Pin{_pin=");
+  n += p.print(_pin);
+  n += p.print(", type=");
+  n += p.print(typeNames[Type]);
+  n += p.print(", note=");
+  n += p.print(Note);
+  n += p.print(", ch=");
+  n += p.print(Channel);
+  n += p.print(", thresh=");
+  n += p.print(Thresold);
+  n += p.print(", curve=");
+  n += p.print(curveNames[Curve]);
+  n += p.print("}");
+  return n;
+}
+
+//===============================
 //   SET
 //===============================
 void pin::set(byte pin) {
   Time = TIMEFUNCTION;
   this->Time = Time + this->MaskTime;
 
-  #if MEGA
-    this->_pin = pin;
-  #endif
-
+  this->_pin = pin;
   switch (pin) {
     case DP_SNAREHEAD:
       this->Type = Piezo;
       this->Note = 38;
+	  this->Thresold = 20;
+      this->ScanTime = 10;
+      this->MaskTime = 30;
+      this->Retrigger = 30;
+	  this->Gain = 20;
       break;
     case DP_SNARERIM:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 42;
       break;
     case DP_KICK:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 36;
       break;
     case DP_TOM1HEAD:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 71;
       break;
     case DP_TOM2HEAD:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 69;
       break;
     case DP_TOM3HEAD:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 67;
       break;
     case DP_TOM4HEAD:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 65;
       break;
-    #if MEGA
-      case DP_EXTRA1:
-        this->Type = Piezo;
-        this->Note = 47;
-        break;
-      case DP_EXTRA2:
-        this->Type = Piezo;
-        this->Note = 73;
-        break;
-    #endif
+    case DP_EXTRA1:
+      this->Type = Disabled;
+      this->Note = 47;
+      break;
+    case DP_EXTRA2:
+      this->Type = Disabled;
+      this->Note = 73;
+      break;
     case DP_HHBOW:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 8;
       break;
     case DP_CHINA:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 77;
       break;
     case DP_SPLASH:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 79;
       break;
     case DP_CRASHEDGE:
-      this->Type = Piezo;
+      this->Type = Disabled;
       this->Note = 81;
       break;
     case DP_HHC:
-      this->Type = HHC;
+      this->Type = Disabled;
       this->Thresold = 10;
       break;
   }
@@ -167,27 +159,16 @@ void pin::scan(byte sensor, byte count) {
   //===============================
   //        HHC
   //===============================
-  #if MEGA
-    if (Type == HHC) {
-      scanHHC(_pin, analogRead(_pin));
-      return;
-    }
-  #else
-    if (Type == HHC) {
-      scanHHC(pin, analogRead(sensor) / 8);
-      return;
-    }
-  #endif
+  if (Type == HHC) {
+    scanHHC(_pin, analogRead(_pin));
+    return;
+  }
 
   //===============================
   //        Switch
   //===============================
   if (Type == Switch) {
-    #if MEGA
-      yn_0 = analogRead(_pin);
-    #else
-      yn_0 = analogRead(sensor);
-    #endif
+    yn_0 = analogRead(_pin);
 
     if (State == Normal_Time) {
       if (yn_0 < Thresold * 10 && yn_1 < Thresold * 10) {
@@ -247,12 +228,8 @@ void pin::scan(byte sensor, byte count) {
       }
     }
 
-    #if MEGA
-      yn_0 = 0.5 + ((float)analogRead(sensor) * (float)Gain) / 64.0;
-    #else
-      yn_0 = 0.5 + ((float)ANALOGREAD(sensor, pin) * (float)Gain) / 64.0;
-    #endif
-
+    float read = (float)analogRead(sensor);
+    yn_0 = 0.5 + (read * (float)Gain) / 64.0;
     if (State == Retrigger_Time) {
       int MaxRetriggerSensor = MaxReading - ((GlobalTime - Time) * (Retrigger + 1) / 16);
       if (MaxRetriggerSensor > 0) {
@@ -310,10 +287,10 @@ void pin::play(byte i, pin* dual) {
   //===============================
   if (Type == HHC) {
     if (State == Footsplash_Time) {
-      if (Mode == MIDI) fastNoteOn(Channel, HHFootNoteSensor[0], 127);
+      if (Mode == MIDI) fastNote(Channel, HHFootNoteSensor[0], 127);
       State = Normal_Time;
     } else if (State == Footclose_Time) {
-      if (Mode == MIDI) fastNoteOn(Channel, HHFootNoteSensor[1], 127);
+      if (Mode == MIDI) fastNote(Channel, HHFootNoteSensor[1], 127);
       State = Normal_Time;
     }
     return;
@@ -398,23 +375,12 @@ void pin::playMIDI(byte i, pin* dual) {
   //===============================
   if (Type == Switch) {
     if (State == Switch_Time) {
-      fastNoteOn(Channel, Note, 127);
-
-      #if USE_WAVTRIGGER
-        wavTrigger(i, 126);
-      #endif
-      #if USE_PISERIAL
-        piNote(Note, 126);
-      #endif
+      fastNote(Channel, Note, 127);
 
       State = Mask_Time;
       MaxReading = Retrigger;
     } else if (State == Choke_Time) {
-      fastNoteOn(Channel, ChokeNote, 127);
-
-      #if USE_WAVTRIGGER
-        wavChoke(i);
-      #endif
+      fastNote(Channel, ChokeNote, 127);
 
       State = Mask_Time;
       MaxReading = Retrigger;
@@ -430,9 +396,9 @@ void pin::playMIDI(byte i, pin* dual) {
   //===============================
   if (Type == YSwitch) {
     if (MaxReading <= 512) {
-      fastNoteOn(Channel, Note, min(127, MaxReading * 8));
+      fastNote(Channel, Note, min(127, MaxReading * 8));
     } else {
-      fastNoteOn(Channel, DualSensor(i), min(127, (MaxReading - 512) * 8));
+      fastNote(Channel, DualSensor(i), min(127, (MaxReading - 512) * 8));
     }
 
     if (DualSensor(i) != 127) {
@@ -450,28 +416,14 @@ void pin::playMIDI(byte i, pin* dual) {
     if (Type == Piezo) {
       byte v = useCurve();
 
-      #if USE_WAVTRIGGER
-        wavTrigger(i, v);
-      #endif
-
-      #if USE_PISERIAL
-        piNote(Note, v);
-      #endif
-
-      fastNoteOn(Channel, Note, v);
+      fastNote(Channel, Note, v);
 
       State = Mask_Time;
 
       // Piezo-Switch
       if (dual->Type == Switch && dual->State == Switch_Time) {
-        fastNoteOn(dual->Channel, dual->Note, 127);
+        fastNote(dual->Channel, dual->Note, 127);
 
-        #if USE_WAVTRIGGER
-          wavTrigger(DualSensor(i), 126);
-        #endif
-        #if USE_PISERIAL
-          piNote(DualSensor(i), 126);
-        #endif
 
         dual->State = Mask_Time;
       }
@@ -490,7 +442,7 @@ void pin::playMIDI(byte i, pin* dual) {
       else if (dual->MaxReading > HHThresoldSensor[0])
         note = HHNoteSensor[0];
 
-      fastNoteOn(Channel, note, useCurve());
+      fastNote(Channel, note, useCurve());
     }
   }
 }
@@ -540,9 +492,6 @@ void pin::scanHHC(byte pin, byte sensorReading) {
   if ((GlobalTime - Time) > MaskTime) {
     if (sensorReading > (MaxReading + Thresold) || sensorReading < (MaxReading - Thresold)) {
       if (Mode == MIDI) {
-        #if USE_WAVTRIGGER
-          wavTriggerHHC(sensorReading);
-        #endif
 
         fastMidiCC(Channel, Note, sensorReading);
       } else if (Mode == Tool && Diagnostic == true) {

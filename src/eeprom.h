@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "consts.h"
-#define TEXT_OUTPUT 1
+#include "define.h"
 
 //==============================================================================
 // EEPROM

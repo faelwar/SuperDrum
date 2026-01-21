@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#define TEXT_OUTPUT 1
+#include "define.h"
 //===HiHat==================
 extern byte HHNoteSensor[];
 extern byte HHThresoldSensor[];
@@ -20,7 +20,7 @@ enum mode:byte
   Tool    = 3
 };
 
-void fastNoteOn(byte _channel, byte _note, byte _velocity);
+void fastNote(byte _channel, byte _note, byte _velocity);
 
 void fastMidiCC(byte _channel, byte _number, byte _value);
 
@@ -28,14 +28,7 @@ void fastMidiCC(byte _channel, byte _number, byte _value);
 extern mode Mode;
 extern unsigned long GlobalTime;
 //=================================
-#if NANO    // Verifica o modelo de arduino e seta o numero de pinos: NANO= 24, MEGA=16, OUTROS=48
-    const byte NPin=1;
-#elif MEGA
-    const byte NPin=16;
-#else
-    const byte NPin=48;
-#endif
-
+const byte NPin=NUM_PINS;
 
 //=================================
 //   DUAL SENSOR
