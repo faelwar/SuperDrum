@@ -15,18 +15,19 @@ void setup() {
   // Multiplexer / Digital Pins Configuration
   //----------------------------------------------------------------------------
   // Enable digital pins with pull-up resistors
-  pinMode(Choke1_Pin, INPUT_PULLUP);
-  pinMode(Choke2_Pin, INPUT_PULLUP);
-  pinMode(Choke3_Pin, INPUT_PULLUP);
-  pinMode(ChokeRide_Pin, INPUT_PULLUP);
-  pinMode(Aux1_Pin, INPUT_PULLUP);
-  pinMode(Aux2_Pin, INPUT_PULLUP);
-  pinMode(Aux3_Pin, INPUT_PULLUP);
-  pinMode(Aux4_Pin, INPUT_PULLUP);
-  pinMode(Aux5_Pin, INPUT_PULLUP);
-  pinMode(Aux6_Pin, INPUT_PULLUP);
-  pinMode(Aux7_Pin, INPUT_PULLUP);
-
+  #if CHOKE
+    pinMode(Choke1_Pin, INPUT_PULLUP);
+    pinMode(Choke2_Pin, INPUT_PULLUP);
+    pinMode(Choke3_Pin, INPUT_PULLUP);
+    pinMode(ChokeRide_Pin, INPUT_PULLUP);
+    pinMode(Aux1_Pin, INPUT_PULLUP);
+    pinMode(Aux2_Pin, INPUT_PULLUP);
+    pinMode(Aux3_Pin, INPUT_PULLUP);
+    pinMode(Aux4_Pin, INPUT_PULLUP);
+    pinMode(Aux5_Pin, INPUT_PULLUP);
+    pinMode(Aux6_Pin, INPUT_PULLUP);
+    pinMode(Aux7_Pin, INPUT_PULLUP);
+  #endif
   //----------------------------------------------------------------------------
   // Pin Initialization
   //----------------------------------------------------------------------------

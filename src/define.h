@@ -12,6 +12,7 @@
   #define ENABLE_CHANNEL 1
   #define NANO 1
   #define NUM_PINS 1
+  #define CHOKE 0
 
   #if defined(__arm__)
     // TODO: https://github.com/sebnil/DueFlashStorage
