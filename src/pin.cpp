@@ -88,10 +88,10 @@ void pin::set(byte pin) {
     case DP_SNAREHEAD:
       this->Type = Piezo;
       this->Note = 38;
-	  this->Thresold = 20;
+	  this->Thresold = 5;
       this->ScanTime = 10;
-      this->MaskTime = 30;
-      this->Retrigger = 30;
+      this->MaskTime = 20;
+      this->Retrigger = 20;
 	  this->Gain = 20;
       break;
     case DP_SNARERIM:

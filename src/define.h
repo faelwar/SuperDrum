@@ -4,7 +4,7 @@
 #pragma once
 #ifndef SUPERDRUM_DEFINE_H
   #define SUPERDRUM_DEFINE_H
-  #define TEXT_OUTPUT 1
+  #define TEXT_OUTPUT 0
   #define USE_PROFILER 0
   #define FASTADC 1
   #define SERIALSPEED 0
