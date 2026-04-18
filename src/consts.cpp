@@ -27,6 +27,11 @@ unsigned long GlobalTime;
 int MaxXtalkGroup[NXtalkGroup] = {-1};
 int MaxMultiplexerXtalk[8]={-1};
 
+// Highest MaxReading across all pads this loop iteration.
+// Used for winner-takes-all suppression: only the pad with the biggest peak fires.
+// Reset to -1 at the end of each loop() alongside the xtalk tables.
+int MaxAllPins = -1;
+
 byte LogPin=0xFF;
 byte LogThresold=0xFF;
 
@@ -61,13 +66,13 @@ void fastNoteOn(byte _channel, byte _note, byte _velocity) {
 
 void fastNoteOff(byte _channel, byte _note, byte _velocity) {
   #if TEXT_OUTPUT
-    Serial.println("NoteOff-" + String(random(10,100)));
-	Serial.print("channel: ");
-    Serial.println(_channel);
-	Serial.print("note: ");
-    Serial.println(_note);
-	Serial.print("velocity: ");
-    Serial.println(_velocity);
+    //Serial.println("NoteOff-" + String(random(10,100)));
+	  //Serial.print("channel: ");
+    //Serial.println(_channel);
+	  //Serial.print("note: ");
+    //Serial.println(_note);
+	  //Serial.print("velocity: ");
+    //Serial.println(_velocity);
   #else
     #if ENABLE_CHANNEL
       Serial.write(0x80 | _channel);
